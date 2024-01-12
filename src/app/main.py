@@ -1,15 +1,10 @@
 from contextlib import asynccontextmanager
 
-from fastapi import Depends, FastAPI, Query, HTTPException
-from sqlmodel import select, Session
+from fastapi import FastAPI
 
-from typing import List
-
-from app.db.db import get_session, init_db
-
-from app.models import Ticket, TicketCreate, TicketRead, Booking
-
-from uuid import uuid4
+from app.api.v1.api import api_router
+from app.core.config import settings
+from app.db.init_db import init_db
 
 
 @asynccontextmanager
@@ -20,52 +15,9 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+app.include_router(api_router, prefix=settings.API_V1_STR)
+
 
 @app.get("/ping")
 async def pong():
     return {"ping": "pong!"}
-
-
-@app.get("/tickets/", response_model=List[TicketRead])
-def read_tickets(
-    *,
-    session: Session = Depends(get_session),
-    offset: int = 0,
-    limit: int = Query(default=100, le=100),
-):
-    tickets = session.exec(select(Ticket).offset(offset).limit(limit)).all()
-    return tickets
-
-
-@app.post("/tickets/", status_code=201)
-async def create_ticket(ticket: TicketCreate, session: Session = Depends(get_session)):
-    ticket = Ticket(id=uuid4(), title=ticket, price=150, expiry_date=ticket.expiry_date)
-    session.add(ticket)
-    session.commit()
-    session.refresh(ticket)
-    return ticket
-
-
-@app.get("/bookings/", response_model=List[TicketRead])
-def read_tickets(
-    *,
-    session: Session = Depends(get_session),
-    offset: int = 0,
-    limit: int = Query(default=100, le=100),
-):
-    tickets = session.exec(select(Ticket).offset(offset).limit(limit)).all()
-    return tickets
-
-
-@app.post("/bookings/", status_code=201)
-async def create_ticket(ticket: TicketCreate, session: Session = Depends(get_session)):
-    ticket = Ticket(id=uuid4(), title=ticket, price=150, expiry_date=ticket.expiry_date)
-    session.add(ticket)
-    session.commit()
-    session.refresh(ticket)
-    return ticket
-
-
-
-
-

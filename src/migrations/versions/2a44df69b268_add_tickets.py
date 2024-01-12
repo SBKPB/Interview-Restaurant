@@ -1,20 +1,20 @@
-"""init
+"""add tickets
 
-Revision ID: 21ce5fa052dd
-Revises: 
-Create Date: 2024-01-11 14:02:57.688317
+Revision ID: 2a44df69b268
+Revises: 06b786947ec2
+Create Date: 2024-01-12 16:21:39.354351
 
 """
 from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-import sqlmodel 
+import sqlmodel
 
 
 # revision identifiers, used by Alembic.
-revision: str = '21ce5fa052dd'
-down_revision: Union[str, None] = None
+revision: str = '2a44df69b268'
+down_revision: Union[str, None] = '06b786947ec2'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

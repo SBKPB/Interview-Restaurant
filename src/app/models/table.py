@@ -1,17 +1,18 @@
 from typing import Optional
-from uuid import UUID
 
+from uuid import UUID, uuid4
 from sqlmodel import Field, SQLModel
 
 
-class TableBase(SQLModel):
+class RestaurantTableBase(SQLModel):
     max_people: int
-    booker: Optional[UUID]
+    booker_id: Optional[UUID] = Field(default=None, foreign_key="user.id")
+    booking_id: Optional[UUID] = Field(default=None, foreign_key="booking.id")
 
 
-class TableCreate(TableBase):
+class RestaurantTableCreate(RestaurantTableBase):
     pass
 
 
-class Table(TableBase):
-    id: UUID = Field(default=None, nullable=False, primary_key=True)
+class RestaurantTable(RestaurantTableBase, table=True):
+    id: UUID = Field(default=uuid4(), primary_key=True)

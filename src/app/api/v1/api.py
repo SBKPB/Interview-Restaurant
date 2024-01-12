@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from api.v1.endpoints import users, tickets, tables, bookings
+from app.api.v1.endpoints import users, tickets, tables, bookings
 
 api_router = APIRouter()
 
